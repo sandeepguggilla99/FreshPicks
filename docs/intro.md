@@ -4,4 +4,4 @@
 
 2. User Flow: https://www.figma.com/file/4LZFveQUJG54UerxkhJKnF/Freshpicks---Userflow?type=whiteboard&node-id=0%3A1&t=uCBzJasHcoxM6KSv-1
 
-3. Milestones: https://docs.google.com/document/d/1k7KTOLEHTS_6Z_A6OhfuMJwz7b04CGyDqr8Eypy62c/edit?usp=sharing
+3. Milestones: [https://docs.google.com/document/d/1k7KTOLEHTS_6Z_A6OhfuMJwz7b04CGyDqr8Eypy62c/edit?usp=sharing](https://docs.google.com/document/d/1k7KTOLEHTS_6Z_A6Ohf-uMJwz7b04CGyDqr8Eypy62c/edit?usp=sharing)https://docs.google.com/document/d/1k7KTOLEHTS_6Z_A6Ohf-uMJwz7b04CGyDqr8Eypy62c/edit?usp=sharing
