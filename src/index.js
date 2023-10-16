@@ -3,6 +3,8 @@ import { initializeApp } from 'firebase/app';
 import { 
     getFirestore, collection, getDocs
 } from 'firebase/firestore'
+import { doc, getDoc } from "firebase/firestore";
+import { getOrganizerProfile } from '/helperClasses/firestoreService.js'
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -27,10 +29,26 @@ const db = getFirestore()
 
 // collection ref
 
-const ref = collection(db, 'Organizer')
+const organizerRef = doc(db, 'Organizer', 'luF9drdJycM0V6ZVR2ZY');
 
-// get collection Data
-getDocs(ref)
-.then ((snapshot) => {
-    console.log(snapshot.docs)
-})
+
+ async function getOrganizerData() {
+    try {
+        const profileData = await getOrganizerProfile(organizerRef);
+    
+        if (profileData) {
+          console.log("Organizer Profile data:", profileData);
+          // Access specific fields like name or email
+          const name = profileData.name;
+          const email = profileData.email;
+          console.log("Organizer's Name:", name);
+          console.log("Organizer's Email:", email);
+        } else {
+          console.log("Organizer Profile not found!");
+        }
+      } catch (error) {
+        console.error("Error getting Organizer Profile:", error);
+      }
+  }
+
+  getOrganizerData()
