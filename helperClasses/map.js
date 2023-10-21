@@ -1,57 +1,83 @@
 import { MAP_KEY } from '/helperClasses/constants.js'
 
-let map
-let marker
+let map;
+let marker;
 
 export function initMap(element) {
+  map = new google.maps.Map(document.getElementById(element), {
+    center: { lat: 0, lng: 0 },
+    zoom: 15
+  });
 
-    var script = document.createElement('script')
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${MAP_KEY}&libraries=places`
-    script.defer = true
+  const input = document.getElementById('location');
+  const searchBox = new google.maps.places.SearchBox(input);
 
-    script.onload = function () {
-        map = new google.maps.Map(document.getElementById(element), {
-            center: { lat: 0, lng: 0 }, // Set the initial map center
-            zoom: 15, // Adjust the zoom level as needed
-        })
+  map.addListener('bounds_changed', () => {
+    searchBox.setBounds(map.getBounds());
+  });
 
-        const input = document.getElementById('location')
-        const searchBox = new google.maps.places.SearchBox(input)
+  searchBox.addListener('places_changed', () => {
+    const places = searchBox.getPlaces();
+    if (places.length === 0) return;
+    const place = places[0];
 
-        map.addListener('bounds_changed', () => {
-            searchBox.setBounds(map.getBounds())
-        })
+    marker.setPosition(place.geometry.location);
 
-        searchBox.addListener('places_changed', () => {
-            const places = searchBox.getPlaces()
-            if (places.length === 0) return
-            const place = places[0]
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
+    console.log(`Selected location: Lat ${lat}, Lng ${lng}`);
+  });
 
-            // Update the marker's position
-            marker.setPosition(place.geometry.location)
+  marker = new google.maps.Marker({
+    map,
+    draggable: true,
+  });
 
-            // You can also get the latitude and longitude from place.geometry.location
-            const lat = place.geometry.location.lat()
-            const lng = place.geometry.location.lng()
-            console.log(`Selected location: Lat ${lat}, Lng ${lng}`)
-        })
-
-        // Create a draggable marker
-        marker = new google.maps.Marker({
-            map,
-            draggable: true,
-        })
-
-        // Listen to marker drag events
-        marker.addListener('dragend', () => {
-            const position = marker.getPosition()
-            const lat = position.lat()
-            const lng = position.lng()
-            console.log(`Selected location: Lat ${lat}, Lng ${lng}`)
-        })
-
-    }
-
-    document.head.appendChild(script)
+  marker.addListener('dragend', () => {
+    const position = marker.getPosition();
+    const lat = position.lat();
+    const lng = position.lng();
+    console.log(`Selected location: Lat ${lat}, Lng ${lng}`);
+  });
 }
 
+
+export class MapPopup {
+    constructor() {
+        this.mapContainer = document.getElementById('map-container');
+        this.closeMapButton = document.getElementById('close-map');
+        this.map = null;
+        this.marker = null;
+    }
+
+    initializeMap() {
+        this.map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 0, lng: 0 },
+            zoom: 15,
+        });
+
+        this.marker = new google.maps.Marker({
+            map: this.map,
+            draggable: true,
+            position: { lat: 0, lng: 0 },
+        });
+
+        this.marker.addListener('dragend', () => {
+            const position = this.marker.getPosition();
+            const lat = position.lat();
+            const lng = position.lng();
+            console.log(`Selected location: Lat ${lat}, Lng ${lng}`);
+        });
+    }
+
+    show() {
+        this.mapContainer.style.display = 'block';
+        this.initializeMap();
+        this.closeMapButton.addEventListener('click', () => this.close());
+    }
+
+    close() {
+        this.mapContainer.style.display = 'none';
+        this.closeMapButton.removeEventListener('click', () => this.close());
+    }
+}
