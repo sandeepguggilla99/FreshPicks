@@ -1,5 +1,6 @@
+import { MAP_KEY } from '/helperClasses/constants.js'
 import { DragAndDropHandler, previewImage, previewVideo } from '/helperClasses/DragAndDropHandler.js'
-import { initMap } from '/helperClasses/map.js'
+import { MapPopup } from '/helperClasses/map.js';
 
 const imageDragAndDrop = new DragAndDropHandler('imageDropZone', 'imagePreview', 'image', previewImage)
 const videoDragAndDrop = new DragAndDropHandler('videoDropZone', 'videoPreview', 'video', previewVideo)
@@ -18,8 +19,8 @@ document.getElementById('addFaq').addEventListener('click', function () {
 })
 
 location.addEventListener('click', () => {
-    mapContainer.style.display = 'block'
-    initMap('map')
+    const mapPopup = new MapPopup();
+    mapPopup.show();
 })
 
 // Close the map pop-up when the close button is clicked
