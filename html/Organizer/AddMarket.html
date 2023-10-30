@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Markets</title>
+    <script type="module" src="/src/OrganizerModules/AddMarket.js" defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78YWX15M8UW4ECURpuG-Ro9SVKllrhXY&callback=myMap"></script>
+    <link rel="stylesheet" href="/css/Organizer/AddMarket.css">
+
+</head>
+
+<body>
+    <header>
+        <h1>Add Market</h1>
+    </header>
+
+    <form>
+        <label for="marketName">Market Name:</label>
+        <input type="text" id="marketName" name="marketName" required><br>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location" name="location" required><br>
+
+        <label for="dateTime">Market Date and Time:</label>
+        <input type="datetime-local" id="dateTime" name="dateTime" required><br>
+
+        <label>Food Categories:</label>
+        <input type="checkbox" id="category1" name="category" value="Category 1">
+        <label for="category1">Category 1</label>
+        <input type="checkbox" id="category2" name="category" value="Category 2">
+        <label for="category2">Category 2</label>
+        <input type="checkbox" id="category3" name="category" value="Category 3">
+        <label for="category3">Category 3</label>
+        <input type="checkbox" id="category4" name="category" value="Category 4">
+        <label for="category4">Category 4</label><br>
+
+        <div id="map-container" style="display: none;">
+            <button id="close-map">Close</button>
+            <div id="map"></div>
+        </div>
+
+        <div>
+            <label for="image">Add Image:</label>
+            <div id="imageDropZone" class="drop-zone">
+                <p id="dropZoneText">Drag & drop image here, or click to browse</p>
+                <input type="file" id="image" name="image" accept="image/*" multiple style="display: none;">
+                <img id="imagePreview" alt="Image Preview" style="max-width: 100%;">
+                <div id="imagePreviewContainer"></div>
+            </div>
+        </div>
+        <br>
+        <div>
+            <label for="video">Add Video:</label>
+            <div id="videoDropZone" class="drop-zone">
+                <p>Drag & drop video here, or click to browse</p>
+                <input type="file" id="video" name="video" accept="video/*" style="display: none;">
+                <div id="videoPreviewContainer"></div>
+            </div>
+        </div>
+        <br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4"></textarea><br>
+
+        <div id="faqContainer">
+            <label>Frequently Asked Questions:</label>
+            <div class="faq">
+                <input type="text" name="question" placeholder="Question">
+                <input type="text" name="answer" placeholder="Answer">
+            </div>
+        </div>
+        <br><br>
+        <button type="button" id="addFaq">Add FAQ</button><br><br>
+
+        <button type="submit">Publish</button>
+    </form>
+</body>
+
+</html>
