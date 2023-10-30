@@ -1,1 +1,0 @@
-export const MAP_KEY = 'AIzaSyC78YWX15M8UW4ECURpuG-Ro9SVKllrhXY'
