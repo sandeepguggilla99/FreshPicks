@@ -4,6 +4,7 @@ export class DragAndDropHandler {
     this.previewElement = document.getElementById(previewElementId)
     this.fileInput = document.getElementById(fileInputId)
     this.previewFunction = previewFunction
+    this.uploadedFiles = [];
 
     this.initialize()
   }
@@ -22,7 +23,7 @@ export class DragAndDropHandler {
       e.preventDefault()
       // Check if the number of selected files exceeds 5
       if (e.dataTransfer.files.length > 5) {
-        // Handle the case where more than 5 files are selected (e.g., show an error message)
+      // Handle the case where more than 5 files are selected (e.g., show an error message)
         alert('You can select a maximum of 5 images.')
       } else {
         Array.from(e.dataTransfer.files).forEach((file) => {
@@ -39,6 +40,7 @@ export class DragAndDropHandler {
   }
 
   createPreview(file) {
+    this.uploadedFiles.push(file)
     if (file.type.startsWith('image/')) {
       this.createImagePreview(file, imagePreviewContainer)
     } else if (file.type.startsWith('video/')) {
@@ -78,9 +80,14 @@ export class DragAndDropHandler {
 
       reader.readAsDataURL(file)
 
+      const fileNameContainer = document.createElement('div')
+      fileNameContainer.classList.add('file-name')
+
       imageContainer.appendChild(imageElement)
       imageContainer.appendChild(closeButton)
+      imageContainer.appendChild(fileNameContainer)
       container.appendChild(imageContainer)
+
       this.dropZoneText = document.querySelector('#imageDropZone p')
       this.imagePreview = document.getElementById('imagePreview')
       this.dropZoneText.style.display = 'none'
@@ -116,8 +123,14 @@ export class DragAndDropHandler {
         videoElement.onloadedmetadata = function() {
           if (videoElement.duration <= 60) {
             // Video duration is 1 minute or less, proceed
+            const fileNameContainer = document.createElement('div')
+            fileNameContainer.classList.add('file-name')
+            fileNameContainer.innerText = `File Name: ${file.name}`
+
             videoContainer.appendChild(videoElement)
             videoContainer.appendChild(closeButton)
+            videoContainer.append(fileNameContainer)
+
             container.appendChild(videoContainer)
           } else {
             alert('Video duration must be 1 minute or less.')
@@ -131,6 +144,10 @@ export class DragAndDropHandler {
     }
   }
 
+  getUploadedFiles() {
+    return this.uploadedFiles
+  }
+  
 }
 
 // Function to preview an image
@@ -150,3 +167,5 @@ export function previewVideo(file, videoPreviewElement) {
   }
   reader.readAsDataURL(file)
 }
+
+
