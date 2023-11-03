@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- <link rel="stylesheet" type="text/css" href="maps.css"/> -->
+    <link rel="stylesheet" href="../../css/User/userHomePage.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-8">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <div class="d-none d-sm-block">
+                    <div class="row">
+                        <div class="col-sm-auto">
+                            <button class="btn btn-primary btn-block" id="searchBtn">Search</button>
+                        </div>
+                        <div class="col-sm-auto">
+                            <button class="btn btn-secondary btn-block" id="clearBtn">Clear Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8 col-2 d-md-none">
+                <button class="btn btn-dark" data-toggle="collapse" data-target="#optionsCollapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="col-md-8 collapse d-md-block" id="optionsCollapse">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="filterCategory">Food Category:</label>
+                            <select class="form-control" id="filterCategory">
+                                <option value="" disabled selected>Choose an option</option>
+                                <option value="1">Category 1</option>
+                                <option value="2">Category 2</option>
+                                <option value="3">Category 2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="filterDate">Date:</label>
+                            <input type="date" class="form-control" id="filterDate" placeholder="Select a date">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="filterDistance">Distance:</label>
+                            <select class="form-control" id="filterDistance">
+                                <option value="" disabled selected>Choose an option</option>
+                                <option value="1">1 KM</option>
+                                <option value="1">2 KM</option>
+                                <option value="50">2 KM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" id="cardsListing">
+
+            </div>
+            <div class="col-md-8">
+
+                <div class="container">
+                    <h1>Nearby Markets</h1>
+                    <div id="showMaps" style="height: 500px;"></div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../../src/UserModules/userMarketListing.js" defer></script>
+</body>
+
+</html>

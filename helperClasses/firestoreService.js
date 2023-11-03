@@ -128,4 +128,4 @@ export const arrayUpdate = async (collectionName, document_ID, data, arrName) =>
 
 }
 
-export { auth, db, doc, setDoc, ref, storage, getDownloadURL, GeoPoint }
+export { auth, db, doc, setDoc, ref, storage, getDownloadURL, GeoPoint, collection, getDocs }

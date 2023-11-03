@@ -2,6 +2,7 @@ import { getCollectionData } from '/helperClasses/firestoreService.js'
 
 const cardContainer = document.querySelector('.event')
 const popSound = document.getElementById('popupSound')
+const addMarketBtn = document.getElementById('addMarketBtn')
 
 // Mark:- Variables
 let marketArr = []
@@ -158,3 +159,9 @@ function createCard(data) {
     return card
 
 }
+
+// MARK:- Add Event Listeners
+
+addMarketBtn.addEventListener('click', function() {
+    window.location.href = '/html/OrganizerPages/AddMarket.html'
+})

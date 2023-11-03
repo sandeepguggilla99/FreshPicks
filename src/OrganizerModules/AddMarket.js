@@ -50,6 +50,7 @@ function initMap() {
 
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function (position) {
+      console.log(position)
       const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
       lat = userLocation.lat()
       lng = userLocation.lng()
@@ -60,7 +61,16 @@ function initMap() {
         map: map,
         draggable: true
       })
-    
+      reverseGeocode(lat, lng, (place) => {
+        if (place) {
+            locationObj = {
+                "name": place.formatted_address,
+                "lat": lat,
+                "lng": lng
+            };
+            console.log(locationObj);
+        }
+    })
       let markerPosition = marker.getPosition()
     
       const locationInput = document.getElementById("location")
@@ -72,8 +82,16 @@ function initMap() {
         const lng = position.lng()
         console.log(`Selected location: Lat ${lat}, Lng ${lng}`)
         updateAddress(marker, locationInput)
-        locationObj["lat"] = lat
-        locationObj["lng"] = lng
+        reverseGeocode(lat, lng, (place) => {
+          if (place) {
+              locationObj = {
+                  "name": place.formatted_address,
+                  "lat": lat,
+                  "lng": lng
+              };
+              console.log(locationObj);
+          }
+      })
       })
     
       // MARK:- Set Up Autocomplete Location
@@ -116,6 +134,21 @@ function updateAddress(marker, autocomplete) {
       autocomplete.value = address
     }
   })
+}
+
+//MARK:- reverse geocode a location using Google Maps Geocoding API
+function reverseGeocode(lat, lng, callback) {
+  const geocoder = new google.maps.Geocoder();
+  const latlng = new google.maps.LatLng(lat, lng);
+
+  geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+      if (status === google.maps.GeocoderStatus.OK && results[0]) {
+          callback(results[0]);
+      } else {
+          console.error('Geocoder failed due to: ' + status);
+          callback(null);
+      }
+  });
 }
 
 // MARK:- Get Categories from DB

@@ -5,8 +5,14 @@ body {
 }
 
 .header {
-    padding: 10px;
-    background-color: #f4f4f4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-marker-btn {
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 .search-bar {
