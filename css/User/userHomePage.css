@@ -1,3 +1,37 @@
 html {
     font-style: normal;
 }
+
+img{
+    max-width: 100px;
+}
+
+.custom-checkbox .form-check-input {
+    display: none;
+}
+
+.custom-checkbox .form-check-label {
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+}
+
+.custom-checkbox .form-check-input:checked + .form-check-label {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.form-check-input {
+    display: none;
+}
+
+/* Style the labels as clickable elements */
+.form-check-label {
+    cursor: pointer;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f0f0f0;
+    border-radius: 3px;
+}

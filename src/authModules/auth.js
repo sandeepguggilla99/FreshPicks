@@ -4,6 +4,7 @@
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-analytics.js";
   import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js'
   import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
+  import { db } from '../../helperClasses/firestoreService.js';
   // TODO: Add SDKs for Firebase products that you want to use
   // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -98,37 +99,44 @@ submitButton.addEventListener("click", function() {
   console.log(password);
 
   signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
+  .then(async (userCredential) => {
+    // Signed in
+    const user = userCredential.user;
 
-      sessionStorage.setItem('userDisplayName', user.displayName);
-      sessionStorage.setItem('userEmail', user.email);
-      sessionStorage.setItem('user', JSON.stringify(user))
+    sessionStorage.setItem('userDisplayName', user.displayName);
+    sessionStorage.setItem('userEmail', user.email);
+    sessionStorage.setItem('user', JSON.stringify(user));
 
-      console.log("Success! Welcome back!");
-      window.alert("Success! Welcome back!");
-      // ...
+    console.log("Success! Welcome back!");
+    window.alert("Success! Welcome back!");
 
-    //   const organizerCollection = collection(db, "Organizer");
-    //   const organizerDocRef = doc(organizerCollection, sessionStorage.getItem('userEmail'));
-    //   const docSnapshot = getDoc(organizerDocRef);
+    const organizerDocRef = doc(db, "Organizer", user.email);
 
-    //   if (!docSnapshot.exists) {
-        window.location.href = "/html/User/userHomePage.html"
-    //   }
-    //   else{
-    //     window.location.href = '../Organizer/AddMarket.html'
-    //   }
-    })
-    .catch((error) => {
+    try {
+      const docSnapshot = await getDoc(organizerDocRef);
+
+      if (docSnapshot.exists()) {
+        window.location.href = "/html/OrganizerPages/Dashboard.html";
+      } else {
+        window.location.href = '/html/User/userHomePage.html';
+      }
+    } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
+      console.log(error);
       console.log("Error occurred. Try again.");
       window.alert("Error occurred. Try again.");
-    });
-});
+    }
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(error);
+    console.log("Error occurred. Try again.");
+    window.alert("Error occurred. Try again.");
+  });
 
+});
 
 signupButton.addEventListener("click", function() {
     main.style.display = "none";

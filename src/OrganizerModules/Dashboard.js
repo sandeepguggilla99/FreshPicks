@@ -3,7 +3,7 @@ import { getCollectionData } from '/helperClasses/firestoreService.js'
 const cardContainer = document.querySelector('.event')
 const popSound = document.getElementById('popupSound')
 const addMarketBtn = document.getElementById('addMarketBtn')
-
+const manageMarketBtn = document.getElementById('manageMarketBtn')
 // Mark:- Variables
 let marketArr = []
 const marketCollectionName = 'Markets'
@@ -16,7 +16,7 @@ function initMap() {
     var lng = -0.120850
     var options = {
         center: new google.maps.LatLng(lat, lng),
-        zoom: 17,
+        zoom: 13,
     }
 
     let map = new google.maps.Map(document.getElementById('googleMap'), options)
@@ -33,7 +33,7 @@ function initMap() {
             console.warn("Geolocation failed or permission denied.");
         })
 
-        google.maps.event.addListener(map, 'closeclick', function() {
+        google.maps.event.addListener(map, 'closeclick', function () {
             if (currentOpenInfoWindow) {
                 currentOpenInfoWindow.close();
                 infoContent.classList.remove('show')
@@ -45,15 +45,44 @@ function initMap() {
 }
 
 function createMarketMarker(data, map) {
+    const customIconUrl = '../../assets/Location_Marker.png';
+
     const marker = new google.maps.Marker({
         position: { lat: data.location.lat, lng: data.location.lng },
         map: map,
         title: data.location.name,
+        icon: {
+            url: customIconUrl,
+            size: new google.maps.Size(100, 100),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(20, 20),
+        }
     });
+    const image = data.media.find(item => item.type === "img")
 
     const infoContent = document.createElement('div');
     infoContent.className = 'info-window-content';
-    infoContent.innerHTML = `<div><h3>${data.location.name}</h3><button id="direction-${data.id}" class="get-directions">Get Directions</button></div>`
+    infoContent.style.maxWidth = '300px'; // Set a max-width for the content
+    
+    infoContent.innerHTML = `
+      <div style="position: relative;">
+        <img src="${image.file}" alt="${data.location.name}" style="width: 300px; height: 150px; border-top-left-radius: 8px; border-top-right-radius: 8px;"/>
+      </div>
+      <div style="background: white; padding: 10px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+        <div style="font-weight: bold; margin-bottom: 5px;">${data.marketName}</div>
+        <span style="color: green;">${data.location.name}</span>
+        <div style="margin-bottom: 5px;">
+          <span style="color: #FFD700;">★</span> 4
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <button id="direction-${data.id}" class="get-directions" style="background-color: #E0E0E0; padding: 8px; border-radius: 4px; border: none; cursor: pointer;">
+          <img src="../../assets/direction.png" alt="Share" style="width: 30px; height: 30px;">
+          </button>
+          <button id="share-${data.id}" class="share-location" style= "background-color: #E0E0E0; "padding: 8px; border-radius: 4px; border: none; cursor: pointer;">
+          <img src="../../assets/share.png" alt="Share" style="width: 25px; height: 25px;">
+          </button>
+        </div>
+      </div>`;
 
     const infoWindow = new google.maps.InfoWindow({
         content: infoContent
@@ -66,18 +95,24 @@ function createMarketMarker(data, map) {
         infoWindow.open(map, marker);
         currentOpenInfoWindow = infoWindow
         popSound.play()
-        setTimeout(() => addDirectionListener(data.id, data.location.lat, data.location.lng), 0);
+        setTimeout(() => addDirectionListener(data.id, data.location.lat, data.location.lng, image), 0);
         setTimeout(() => infoContent.classList.add('show'), 10);
     });
 }
 
-function addDirectionListener(id, lat, lng) {
+function addDirectionListener(id, lat, lng, img) {
     const button = document.getElementById(`direction-${id}`);
+    const shareBtn = document.getElementById(`share-${id}`);
+
     if (button) {
         button.addEventListener('click', () => {
             getDirections(lat, lng);
         });
     }
+
+    shareBtn.addEventListener('click', () => {
+        shareData(img, 'www.google.com')
+    })
 }
 
 function getDirections(lat, lng) {
@@ -96,15 +131,34 @@ async function getMarketsData() {
                 const card = createCard(i)
                 cardContainer.appendChild(card)
             }
-            
+
         }
+        initMap()
     } catch (error) {
         console.error("Error:", error)
     }
 }
 
 getMarketsData()
-initMap()
+
+async function shareData(imageFile, url) {
+    if (navigator.share) {
+        try {
+            await navigator.share({
+                files: [imageFile],
+                url: url,
+                title: 'Check this out!',
+                text: 'I wanted to share this with you.'
+            });
+            console.log('Data was shared successfully');
+        } catch (err) {
+            console.error('Share failed:', err.message);
+        }
+    } else {
+        // Fallback for browsers that don't support the Web Share API
+        console.log('Web Share API is not supported in this browser.');
+    }
+}
 
 // MARK:- Create Cards
 function createCard(data) {
@@ -152,16 +206,30 @@ function createCard(data) {
     card.appendChild(footer)
 
     const detailsLink = document.createElement('a')
-    detailsLink.href = '#'
     detailsLink.textContent = 'View Details'
+    const itemId = data.id
     footer.appendChild(detailsLink)
 
+    detailsLink.addEventListener('click', function(event) {
+        event.preventDefault();
+        openDetailPage(itemId);
+    });
     return card
+}
 
+function openDetailPage(id) {
+    window.location.href = `/src/UserModules/MarketDetails/index.html?documentId=${id}`
 }
 
 // MARK:- Add Event Listeners
 
-addMarketBtn.addEventListener('click', function() {
+addMarketBtn.addEventListener('click', function () {
     window.location.href = '/html/OrganizerPages/AddMarket.html'
 })
+
+manageMarketBtn.addEventListener('click', function () {
+    window.location.href = '/html/OrganizerPages/ManageMarket.html'
+})
+
+
+

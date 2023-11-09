@@ -4,13 +4,17 @@ body {
     padding: 0;
 }
 
+h1 {
+    text-align: center;
+}
+
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.add-marker-btn {
+.add-marker-btn, .manage-marker-btn {
     padding: 5px 10px;
     cursor: pointer;
 }

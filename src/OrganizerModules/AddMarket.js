@@ -29,6 +29,9 @@ const profileImageInput = document.getElementById('profileInput')
 const profileImagePreview = document.getElementById('profilePreview')
 const dateTimeInput = document.getElementById("dateTime")
 
+const finishModal = document.getElementById("finishModal")
+const finishBtn = document.getElementById("finishBtn")
+
 //MARK:- VARIABLES
 let categoryArr = []
 let faqArray = []
@@ -269,15 +272,15 @@ async function setData() {
 
   console.log(data)
   const emptyKeys = checkEmptyValues(data)
-
   if (emptyKeys.length > 0) {
     alert(`The following keys have null, undefined, or empty values: ${emptyKeys.join(', ')}`)
   } else {
     const a = setDataToCollection(collectionName, data)
     if (a) {
-      console.log('success')
+      openFinishModal()
     } else {
       console.log('fail')
+      alert(`Something went wrong`)
     }
   }
 
@@ -432,6 +435,19 @@ function setVendorData() {
   })
 }
 
+function openFinishModal() {
+  finishModal.style.display = "block"
+}
+
+// Function to close the modal
+function closeFinishModal() {
+  if (window.history.length > 1) {
+    window.history.back();
+} else {
+    window.location.href = '../../html/OrganizerPages/Dashboard.html'
+}
+}
+
 // Events Listener
 addVendorsBlock.addEventListener('click', function (e) {
   e.preventDefault()
@@ -508,4 +524,8 @@ dateTimeInput.addEventListener("change", function () {
     "date": formattedDate,
     "time": formattedTime
   }
+})
+
+finishBtn.addEventListener("click", function() {
+  closeFinishModal()
 })

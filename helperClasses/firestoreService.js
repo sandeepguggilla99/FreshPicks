@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js'
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js'
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, GeoPoint, updateDoc, arrayUnion, addDoc } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js'
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs, GeoPoint, updateDoc, arrayUnion, addDoc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js'
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js'
 
 const firebaseConfig = {
@@ -69,7 +69,11 @@ export const getCollectionData = async (collectionName) => {
   return getDocs(collectionRef)
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        dataArray.push(doc.data())
+        const dataWithId = {
+          id: doc.id,
+          ...doc.data()
+        }
+        dataArray.push(dataWithId)
       })
       return dataArray
     })
@@ -125,7 +129,22 @@ export const arrayUpdate = async (collectionName, document_ID, data, arrName) =>
     console.error("Error fetching document data: " + error.message)
     return false
   }
-
 }
+
+export const deleteDocument = async (collectionName, documentId) => {
+  // Create a reference to the document
+  const docRef = doc(db, collectionName, documentId)
+
+  // Delete the document
+  try {
+    await deleteDoc(docRef);
+    console.log("Document successfully deleted!");
+    return true;
+} catch (error) {
+    console.error("Error deleting document: ", error);
+    return false;
+}
+}
+
 
 export { auth, db, doc, setDoc, ref, storage, getDownloadURL, GeoPoint, collection, getDocs }

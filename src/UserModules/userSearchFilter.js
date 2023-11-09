@@ -58,7 +58,7 @@ export class filterMarketData {
         if (!isNaN(this.filterDistance)) {
             // Filter based on distance
             filteredMarkets = this.marketDataArray.filter(market => {
-                console.log("******** This is inside filtered markets");
+                console.log("**** This is inside filtered markets");
                 console.log("This is market array");
                 console.log(market);
                 console.log("This is market location");
@@ -82,7 +82,7 @@ export class filterMarketData {
 
         if (Array.isArray(this.filterCategory) && this.filterCategory.length > 0) {
             // Filter based on category
-            console.log("***************");
+            console.log("*****");
             filteredMarkets = filteredMarkets.filter((market) => {
               if (Array.isArray(market.marketCategories) && market.marketCategories.length > 0) {
                 console.log("hellooo");
@@ -98,17 +98,33 @@ export class filterMarketData {
         console.log(filteredMarkets)
 
 
-        if (this.filterDate && this.filterDate !== "") {
-            filteredMarkets = filteredMarkets.filter(market => {
-                console.log("Checking dates..");
-                console.log(market.marketDate.date, this.filterDate);
-                if (market.marketDate.date === this.filterDate) {
-                   
-                    return true; // Keep the date in filteredMarkets
-                } else {
-                    return false; // Exclude the date from filteredMarkets
-                }
-            });
+        if (this.filterDate && this.filterDate !== "" && filteredMarkets.length > 0) {
+            // Convert the filterDate and today's date to Date objects
+            const parseSelectedDate = new Date(this.filterDate);
+            let selectedDate = moment(parseSelectedDate).format('DD/MM/YYYY');
+            
+            const parsetoday = new Date();
+            let today = moment(parsetoday).format('DD/MM/YYYY');
+
+            console.log("TODAYSSSS DATTEEE and SELECTED DATEEE");
+            console.log(selectedDate, today)
+        
+            // Check if the selected date is in the past
+            if (selectedDate > today) {
+                // If the selected date is not in the past, filter the markets
+                filteredMarkets = filteredMarkets.filter(market => {
+                    // Compare market date with the selected date
+                    if (market.marketDate.date === this.filterDate) {
+                        return true; // Keep the date in filteredMarkets
+                    } else {
+                        return false; // Exclude the date from filteredMarkets
+                    }
+                });
+            } else {
+                // The selected date is in the past, so return false
+                filteredMarkets = [];
+                // return false;
+            }
         }
        
 
@@ -118,7 +134,7 @@ export class filterMarketData {
 
 
         // Sort the filtered markets by distance in increasing order if distance filter is applied
-        if (!isNaN(this.filterDistance)) {
+        if (!isNaN(this.filterDistance) && filteredMarkets.length > 0) {
             filteredMarkets.sort((a, b) => {
                 const distanceA = this.calculateDistance(
                     this.userLocation.lat,
@@ -142,5 +158,3 @@ export class filterMarketData {
 
 
 }
-
-

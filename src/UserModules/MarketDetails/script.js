@@ -3,7 +3,7 @@
 
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js';
 import{getAuth} from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js';
-import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, updateDoc, getDoc, getDocs, collection } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
 import { MapPopup } from '../../UserModules/MarketDetails/map.js';
 const apiKey = 'AIzaSyC78YWX15M8UW4ECURpuG-Ro9SVKllrhXY'
 
@@ -39,30 +39,6 @@ const currentURL = window.location.href;
 const params = new URLSearchParams(new URL(currentURL).search);
 const documentId = params.get("documentId");
 
-
-
-
-// const marketData = {
-//     marketName: "First Market",
-//     description: "This is our First Market",
-//     faq: [
-//         { question: "First", answer: "second" },
-//         { question: "First", answer: "second" },
-//     ],
-//     media: [
-//         { file: "https://firebasestorage.googleapis.com/v0/b/freshpicks-da3ef.appspot.com/o/image%2F216366-Vancouver-Coast.jpg%2F1698634403821?alt=media&token=dfbd5f5d-c4f9-4d68-89c4-f393f1383e18", type: "img" },
-//         { file: "https://firebasestorage.googleapis.com/v0/b/freshpicks-da3ef.appspot.com/o/video%2Fcountdown_-_2637%20(540p).mp4%2F1698634405498?alt=media&token=f4e0bf52-8435-4759-b65c-4fca09068244", type: "video" },
-//     ],
-//     categories: ["1"],
-//     vendors: [
-//         {
-//             name: "Sanjeev",
-//             description: "ad",
-//             categories: "1",
-//             profileImg: "https://firebasestorage.googleapis.com/v0/b/freshpicks-da3ef.appspot.com/o/image%2F127.0.0.1_5500_html_Organizer_AddMarket.html_marketName%3D%26location%3D%26dateTime%3D%26image%3D%26video%3D%26description%3D%26question%3D%26answer%3D%20(1).png%2F1698634402405?alt=media&token=19e54475-da04-4140-9586-a8aa18f45d09",
-//         },
-//     ],
-// };
 
 
 const addGoogleMap = (latitude, longitude) => {
@@ -190,6 +166,108 @@ const populateMarketDetails = async(data) => {
     })
 }
 
+const populateReviewDetails = async() =>  {
+
+    const marketDocRef = doc(db, collectionName, documentId);
+
+    try {
+        const marketDoc = await getDoc(marketDocRef);
+        if (marketDoc.exists()) {
+          const marketData = marketDoc.data();
+          const reviews = marketData.reviews || [];
+  
+          const reviewCards = document.getElementById("reviewCards");
+  
+          if (reviews.length === 0) {
+            // If no reviews, display a message
+            const message = `
+              <div class="alert alert-info" role="alert">
+                No reviews available for this market.
+              </div>
+            `;
+  
+            reviewCards.innerHTML += message;
+          } else {
+            reviews.forEach((review) => {
+              const card = `
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">${review.user}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Rating: ${review.rating}</h6>
+                    <p class="card-text">${review.comment}</p>
+                    <p class="card-text">${review.date.toDate().toLocaleDateString()}</p>
+                  </div>
+                </div>
+              `;
+  
+              reviewCards.innerHTML += card;
+            });
+          }
+        } else {
+          console.log("Market document does not exist.");
+        }
+      } catch (error) {
+        console.error("Error fetching review data: ", error);
+      }
+
+    };
+
+
+document.getElementById("saveReview").addEventListener("click", async function () {
+    const userName = document.getElementById("userName").value;
+    const userComment = document.getElementById("userComment").value;
+    const userRating = parseInt(document.getElementById("userRating").value);
+
+    if (!userName || !userComment || isNaN(userRating) || userRating < 1 || userRating > 5) {
+      alert("Please fill in all fields and provide a valid rating (1-5).");
+      return;
+    }
+
+    const review = {
+      user: userName,
+      comment: userComment,
+      rating: userRating,
+      date: new Date(),
+    };
+
+
+    const marketDocRef = doc(db, collectionName, documentId);
+
+    try {
+      const marketDoc = await getDoc(marketDocRef);
+      if (marketDoc.exists()) {
+        const marketData = marketDoc.data();
+
+        // Check if the "reviews" array exists, and create it if it doesn't
+        if (!marketData.reviews) {
+          marketData.reviews = [];
+        }
+
+        marketData.reviews.push(review);
+
+        // Update the "market" document with the new reviews array
+        await updateDoc(marketDocRef, { reviews: marketData.reviews });
+
+        console.log("Review added:", review);
+
+        // Close the modal
+        let myModal = new bootstrap.Modal(document.getElementById("myModal"));
+        myModal.hide();
+      } else {
+        console.log("Market document does not exist.");
+      }
+    } catch (error) {
+      console.error("Error adding review: ", error);
+    }
+
+
+    // For demonstration, let's log the review data to the console.
+    console.log("Review added:", review);
+
+    // Close the modal
+    let myModal = new bootstrap.Modal(document.getElementById("myModal"));
+    myModal.hide();
+  });
 
 
 
@@ -206,8 +284,7 @@ loadGoogleMapsScript();
 
 
 // Call the function to populate the page with data
-getMarketDetails().then((data) => populateMarketDetails(data) );
+getMarketDetails().then((data) => populateMarketDetails(data).then(() => populateReviewDetails()) );
 
 
-
-
+// JavaScript to fetch review data and populate the carousel
