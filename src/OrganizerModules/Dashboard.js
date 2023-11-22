@@ -21,14 +21,12 @@ function initMap(arr) {
         center: new google.maps.LatLng(lat, lng),
         zoom: 13,
     }
-    document.getElementById('mapProgressBar').style.display = 'block'
     let map = new google.maps.Map(document.getElementById('googleMap'), options)
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
             const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
             map.setCenter(userLocation)
-            // document.getElementById('mapProgressBar').style.display = 'none'
             // MARK:- Hide Loader
             document.body.classList.add("loaded")
             arr.forEach((data) => {
@@ -45,7 +43,7 @@ function initMap(arr) {
                 infoContent.classList.remove('show')
             }
         })
-        
+
     } else {
 
     }
@@ -70,7 +68,7 @@ function createMarketMarker(data, map) {
     const infoContent = document.createElement('div')
     infoContent.className = 'info-window-content'
     infoContent.style.maxWidth = '300px'
-    
+
     infoContent.innerHTML = `
       <div style="position: relative">
         <img src="${image.file}" alt="${data.location.name}" style="width: 300px height: 150px border-top-left-radius: 8px border-top-right-radius: 8px"/>
@@ -136,7 +134,7 @@ async function getMarketsData() {
             if (i.userId === userId) {
                 marketArr.push(i)
             }
-        }    
+        }
         loadData(marketArr)
     } catch (error) {
         console.error("Error:", error)
@@ -194,11 +192,6 @@ function createCard(data) {
     title.textContent = data.marketName
     content.appendChild(title)
 
-    const subtitle = document.createElement('p')
-    subtitle.className = 'card-subtitle'
-    subtitle.textContent = data.subtitle
-    content.appendChild(subtitle)
-
     const date = document.createElement('p')
     date.textContent = `${data.date.date} | ${data.date.time}`
     content.appendChild(date)
@@ -209,9 +202,37 @@ function createCard(data) {
 
     const rating = document.createElement('p')
     rating.className = 'card-rating'
-    for (let i = 0; i < data.averageRating; i++) {
-        rating.textContent += '★'
+
+    const maxStars = 5
+    var yellowStars = 0
+
+    if (!isNaN(data.averageRating)) {
+        yellowStars = Math.floor(data.averageRating)
     }
+
+    var greyStars = maxStars - yellowStars
+
+    for (let i = 0; i < yellowStars; i++) {
+        const yellowStar = document.createElement('span')
+        yellowStar.textContent = '★'
+        yellowStar.style.color = 'gold'
+        yellowStar.style.padding = '2px';
+        yellowStar.style.width = '12px'
+        yellowStar.style.height = '12px'
+        rating.appendChild(yellowStar)
+    }
+
+    console.log(greyStars)
+    for (let i = 0; i < greyStars; i++) {
+        const greyStar = document.createElement('span')
+        greyStar.textContent = '★'
+        greyStar.style.color = 'grey' 
+        greyStar.style.padding = '2px';
+        greyStar.style.width = '12px'
+        greyStar.style.height = '12px'
+        rating.appendChild(greyStar)
+    }
+
     content.appendChild(rating)
 
     const footer = document.createElement('div')
@@ -221,9 +242,9 @@ function createCard(data) {
     detailsLink.textContent = 'View Details'
     const itemId = data.id
     footer.appendChild(detailsLink)
-    card.appendChild(footer)
+    content.appendChild(footer)
 
-    detailsLink.addEventListener('click', function(event) {
+    detailsLink.addEventListener('click', function (event) {
         event.preventDefault()
         openDetailPage(itemId)
     })
@@ -231,7 +252,7 @@ function createCard(data) {
 }
 
 function openDetailPage(id) {
-    window.location.href = `/src/UserModules/MarketDetails/index.html?documentId=${id}`
+    window.location.href = `/html/User/MarketDetails.html?documentId=${id}`
 }
 
 function filterData(text) {
@@ -266,13 +287,20 @@ manageMarketBtn.addEventListener('click', function () {
     }, 500)
 })
 
-searchInput.addEventListener('input', function() {
+searchInput.addEventListener('input', function () {
     filterData(searchInput.value)
 })
 
+const navMenuBtn = document.getElementById('navMenuBtn');
+const navMenu = document.getElementById('navMenu');
+
+navMenuBtn.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
+
 // document.addEventListener('DOMContentLoaded', function () {
-//     const offlinePage = document.getElementById('offlinePage');
-//     handleNetworkChange(offlinePage);
+//     const offlinePage = document.getElementById('offlinePage')
+//     handleNetworkChange(offlinePage)
 
 //     // Event listener for online/offline events
 //     window.addEventListener('online', function() {

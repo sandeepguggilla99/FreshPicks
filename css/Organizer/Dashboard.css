@@ -8,13 +8,18 @@
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --header-background-color: #F5F7FA;
+    --border-radius: 20px;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     margin: 0;
     padding: 0;
     transition: transform 0.5s ease-in-out;
+}
+
+.logo {
+    margin-left: 15px;   
 }
 
 header {
@@ -59,20 +64,22 @@ header {
     display: flex;
     align-items: center;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: var(--border-radius);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.search-icon {
-    padding: 10px;
 }
 
 #searchInput {
     border: none;
     padding: 10px;
-    border-radius: 0 20px 20px 0;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
     outline: none;
-    width: 400px; /* Adjust to the desired width */
+    width: 400px;
+}
+
+.search-icon {
+    padding: 10px;
+    width: 20px;
+    height: 20px;
 }
 
 .header input[type="text"] {
@@ -83,10 +90,16 @@ header {
 }
 
 #googleMap {
-    width: 100%;
+    width: 75%;
     height: 90vh;
     background-color: #ebebeb;
     position: relative;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+}
+
+.events h1, .search-bar {
+    padding-left: 5px;
 }
 
 .main-content {
@@ -95,16 +108,16 @@ header {
 
 .events {
     padding: 20px;
-    overflow-y: auto; /* Enable scrolling for the event section */
-    max-height: 100vh; /* Set maximum height for scrolling */
+    overflow-y: auto; 
+    max-height: 100vh;
 }
 
 .event {
     display: flex;
     flex-direction: column;
-    align-items: center;
     margin-bottom: 20px;
-    padding: 0 20px; /* 20px padding on left and right */
+    padding: 0 20px; 
+    padding-left: 0;
 }
 
 .card img {
@@ -115,10 +128,6 @@ header {
 
 .event-details h3 {
     margin: 0;
-}
-
-.stars {
-    color: gold;
 }
 
 button {
@@ -133,9 +142,15 @@ button {
 
 .card {
     display: flex;
-    flex-direction: row; /* Set to row to make sure the footer is below the rating */
-    border: 1px solid #ccc;
+    flex-direction: row;
+    border-radius: var(--border-radius);
     margin: 10px;
+    box-shadow: 0 2px 4px var(--box-shadow-color);
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
 }
 
 .image-container {
@@ -146,22 +161,33 @@ button {
 img {
     width: 100%;
     height: auto;
+    object-fit: cover;
 }
 
 .card-content {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    padding: 10px;
+    padding: 1rem;
 }
 
 .card-footer {
     padding: 10px;
-    text-align: right;
+    text-align: center;
+    border: solid 1px var(--primary-color);
+    border-radius: var(--border-radius);
+    color: var(--primary-color);
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+.card-footer:hover {
+    background-color: var(--primary-color);
+    color: white;
 }
 
 .card-title {
     margin-top: 0;
+    margin-bottom: 0;
 }
 
 .card-subtitle,
@@ -193,17 +219,117 @@ p {
     transform: translateX(0);
 }
 
-#mapProgressBar {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background-color: #ddd; /* Default background color */
-}
+@media only screen and (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
 
-#mapProgressBar .progress {
-    height: 100%;
-    background-color: #4CAF50; /* Progress bar color */
-    width: 0;
+    .buttons-container {
+        display: none; /* Hide buttons in desktop view */
+    }
+
+    #addMarketBtn,
+    #manageMarketBtn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .logo {
+        order: -1; /* Move the logo to the top */
+        margin: 20px 0;
+    }
+
+    .search-bar {
+        margin-top: 130px;
+        margin-bottom: 2rem;
+        width: 90%;
+        margin-left: 0;
+    }
+
+    .main-content {
+        flex-direction: column-reverse; /* Reverse the order for mobile view */
+    }
+
+    .events {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .card img {
+        border-radius: 10px; /* Adjust border radius */
+    }
+
+    .event {
+        margin-bottom: 10px;
+    }
+
+    #googleMap {
+        width: 90%;
+        left: 20px;
+        height: 300px;
+    }
+
+    .card h2 {
+        font-size: 1.05rem;
+    }
+
+    .card p {
+        font-size: 0.7rem;
+    }
+
+    .card-footer {
+        padding: 5px;
+    }
+
+    .nav-menu-btn {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1005; 
+    }
+    
+    .nav-menu-btn {
+        display: block;
+        cursor: pointer;
+    }
+    
+    .nav-menu {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: -200px;
+        width: 200px;
+        height: 100%;
+        background-color: var(--primary-color);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+        border-radius: 0  20px 20px;
+        z-index: 1000;
+        transition: left 0.3s ease;
+        margin-top: 90px;
+    }
+    
+    .nav-menu.active {
+        left: 0;
+    }
+    
+    .nav-menu a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: var(--background-color);
+        padding-left: 20px;
+    }
+
+    header {
+        padding: 0;
+    }
+    
 }

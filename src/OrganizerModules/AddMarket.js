@@ -186,7 +186,7 @@ function showCategories() {
   const categoryContainer = document.getElementById("category-container")
 
   categoryArr.forEach((category, index) => {
-    const button = document.createElement("button")
+    const button = document.createElement("div")
     button.className = "category-button"
     button.dataset.index = index
 
@@ -206,9 +206,11 @@ function showCategories() {
 
       if (categoryArr[clickedIndex].isSelected) {
         button.classList.add("clicked-button")
+        textSpan.classList.add("clicked-text");
         image.src = '/assets/Success.svg'
       } else {
         button.classList.remove("clicked-button")
+        textSpan.classList.remove("clicked-text");
         image.src = '/assets/plus-icon.svg'
       }
 

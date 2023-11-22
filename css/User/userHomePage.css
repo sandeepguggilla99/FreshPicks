@@ -527,7 +527,7 @@ footer {
     }
 
     .container {
-        grid-area: container;
+        /* grid-area: container; */
     }
 
     .my-card-listing {

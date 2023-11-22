@@ -13,6 +13,7 @@
     left: 0;
     width: 100%;
     height: 100%;
+    border-radius: 30px;
     background: var(--preloader-bg-color);
     display: flex;
     justify-content: center;

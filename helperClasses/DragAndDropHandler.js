@@ -59,15 +59,15 @@ export class DragAndDropHandler {
       imageElement.style.maxHeight = '100px'
       imageElement.style.objectFit = 'cover'
 
-      const closeButton = document.createElement('button')
-      closeButton.innerHTML = 'X'
+      const closeButton = document.createElement('div')
+      closeButton.innerHTML = '<img src="../../assets/cancel.svg" alt="">'
       closeButton.classList.add('close-button')
       closeButton.addEventListener('click', () => {
         imageContainer.remove()
         if (this.imagePreviewContainer.children.length === 0) {
           this.dropZoneText = document.querySelector('#imageDropZone p')
           this.imagePreview = document.getElementById('imagePreview')
-          this.dropZoneText.style.display = 'block'
+          this.dropZoneText.style.display = 'contents'
           this.imagePreview.style.display = 'block'
           this.fileInput.value = ''
         }

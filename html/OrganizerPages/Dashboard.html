@@ -12,13 +12,22 @@
     <link rel="stylesheet" href="../../css/OfflineHandler.css">
 </head>
 <body>
+
+    <button id="navMenuBtn" class="nav-menu-btn">&#9776;</button>
+
+    <!-- Navigation menu -->
+    <div id="navMenu" class="nav-menu">
+        <a href="../../html/OrganizerPages/AddMarket.html">Add Market</a>
+        <a href="../../html/OrganizerPages/ManageMarket.html">Manage Market</a>
+    </div>
+
     <!-- This is for Loader -->
     <div id="preloader">
         <img src="../../assets/favico 2.svg" alt="">
     </div>
     <header>
         <div class="logo">
-            <img src="../../assets/FreshPickLogo 1.svg" alt="Logo">
+            <img src="../../assets/FreshPickLogo 1.svg" alt="Logo" class="logo_img">
         </div>
         <div class="buttons-container">
             <button id="addMarketBtn" class="add-marker-btn">Add Market</button>
@@ -28,7 +37,7 @@
 
     <div class="search-bar">
         <div class="search-container">
-            <span class="search-icon">🔍</span>
+            <img src="../../assets/search.svg" alt="Search" class="search-icon">
             <input id="searchInput" type="text" placeholder="Find Events">
         </div>
     </div>
@@ -43,7 +52,6 @@
 
         <!-- Map Section -->
         <div id="googleMap">
-            <div id="mapProgressBar"></div>
         </div>
     </div>
 
@@ -55,12 +63,6 @@
     <div id="customToast" class="toast">
         <p id="toastMessage"></p>
     </div>
-
-    <!-- <div id="offlinePage" class="offline-container">
-        <img src="../../assets/images.jpeg" alt="Offline Icon" class="offline-icon">
-        <h1>Oops! You're offline.</h1>
-        <p>Please check your internet connection and try again.</p>
-    </div> -->
 
 </body>
 </html>

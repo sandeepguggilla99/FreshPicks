@@ -21,8 +21,9 @@
     </header>
 
     <form novalidate>
-        <label for="marketName">Market Name:</label>
-        <input type="text" id="marketName" name="marketName" required><br>
+        <h2 class="header2">Market Information</h2>
+        <label for="marketName">Market Title:</label>
+        <input type="text" id="marketName" name="marketName" placeholder="Enter Market Title" required><br>
 
         <label for="location">Search for a Location:</label>
         <input type="text" id="location" name="location" required><br>
@@ -32,19 +33,26 @@
         <label for="dateTime">Market Date and Time:</label>
         <input type="datetime-local" id="dateTime" name="dateTime" required><br>
 
+        <h2 class="header2">Description</h2>
+        <textarea id="description" name="description" rows="4" placeholder="Write market description here...." required></textarea><br>
+
+        <h2 class="header2">Food Category</h2>
         <div id="category-container"></div><br>
 
         <div id="addVendorsBlock">
-            <h3>Vendors</h3>
-            <img src="/assets/Add Parner.svg" alt="Add Vendors">
+            <h2 class="header2">Vendors</h2>
+            <img class="add-vendor" src="../../assets/plus.svg" alt="">
         </div><br>
 
         <div id="slider-container">
             <div class="slider"></div>
         </div><br>
 
-        <div>
-            <label for="image">Add Image:</label>
+
+
+    <div class="add-media">
+        <div class="media-content">
+            <h2 class="header2">Add Images</h2>
             <div id="imageDropZone" class="drop-zone">
                 <p id="dropZoneText">Drag & drop image here, or click to browse</p>
                 <input type="file" id="image" name="image" accept="image/*" multiple style="display: none;">
@@ -53,27 +61,29 @@
             </div>
         </div>
         <br>
-        <div>
-            <label for="video">Add Video:</label>
+        <div class="media-content">
+            <h2 class="header2">Add Videos</h2>
             <div id="videoDropZone" class="drop-zone">
                 <p>Drag & drop video here, or click to browse</p>
                 <input type="file" id="video" name="video" accept="video/*" style="display: none;">
                 <div id="videoPreviewContainer"></div>
             </div>
         </div>
-        <br>
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" required></textarea><br>
+    </div>
+    <br>
+
+
 
         <div id="faqContainer">
-            <label>Frequently Asked Questions:</label>
+            <h2 class="header2">Add FAQs</h2>
             <div class="faq">
                 <input type="text" name="question" placeholder="Question">
                 <input type="text" name="answer" placeholder="Answer">
             </div>
+            <button type="button" id="addFaq">Add FAQ</button>
         </div>
         <br><br>
-        <button type="button" id="addFaq">Add FAQ</button><br><br>
+        
 
         <button type="submit" id="publishBtn">Publish</button>
     </form>
