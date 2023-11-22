@@ -2,6 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    transition: transform 0.5s ease-in-out;
 }
 
 h1 {
@@ -42,6 +43,7 @@ h1 {
     width: 100%;
     height: 450px;
     background-color: #ebebeb;
+    position: relative;
 }
 
 .events {
@@ -144,4 +146,28 @@ button {
 .info-window-content.show {
     opacity: 1;
     transform: translateY(0);
+}
+
+.slide-out {
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.slide-in {
+    transform: translateX(0);
+}
+
+#mapProgressBar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #ddd; /* Default background color */
+}
+
+#mapProgressBar .progress {
+    height: 100%;
+    background-color: #4CAF50; /* Progress bar color */
+    width: 0;
 }

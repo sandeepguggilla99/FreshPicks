@@ -1,55 +1,88 @@
+/* Variables */
+:root {
+    --primary-color: #487556;
+    --background-color: #ffffff;
+    --box-shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-background-color: #e0f7fa;
+    --font-family: 'Inter', sans-serif;
+    --font-weight-regular: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --header-background-color: #F5F7FA;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: var(--font-family);
+    background-color: var(--background-color);
     margin: 0;
     padding: 0;
+    transition: transform 0.5s ease-in-out;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    padding: 10px;
+    background-color: var(--header-background-color);
+    color: white;
+    margin: 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.add-market-button {
+    margin-right: 20px; 
+    background-color: var(--primary-color);
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 h1 {
     text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-weight: var(--font-weight-bold);
+    margin-top: 85px;
 }
 
-.container {
-    max-width: 600px;
-    margin: 30px auto;
-    /* background-color: #fff; */
-    padding: 20px;
-    /* border-radius: 5px; */
-    /* box-shadow: 0px 0px 10px rgba(0,0,0,0.1); */
+h2 {
+    font-size: 1rem;
+    font-size: var(--font-weight-semibold);
+}
+
+p {
+    font-size: 0.6rem;
 }
 
 .market-item {
     background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+    box-shadow: 0px 0px 10px var(--box-shadow-color);
     margin-bottom: 1rem;
-    padding: 1rem;
-}
-
-h1 {
-    color: #4CAF50;
-    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border-radius: 10px;
+    transition: transform 0.5s, opacity 0.5s, background-color 0.3s ease-in-out;
+    overflow: hidden;
+    position: relative;
 }
 
 .marketImage {
-    width: 150px; 
-    height: auto;
-    border-radius: 10px 0 0 10px; 
-}
-
-.market-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid #e5e5e5;
-    padding: 15px 0;
-}
-
-.market-item binIcon, .market-item editIcon {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    object-fit: fit;
+    width: 120px;
+    border-radius: 10px 0 0 10px;
 }
 
 .market-info {
@@ -57,18 +90,17 @@ h1 {
     margin-left: 20px;
 }
 
-.delete-btn {
-    padding: 10px 20px;
-    border-radius: 5px;
+.edit-btn {
+    padding: 10px;
+    padding-left: 5px;
     cursor: pointer;
     display: flex;
     align-items: center;
 }
 
-.market-item.deleting {
-    transform: translate3d(-100%, 0, 0);
-    opacity: 1;
-    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+.delete-btn {
+    margin-right: 1rem;
+    cursor: pointer;
 }
 
 .market-item.deleted {
@@ -76,6 +108,47 @@ h1 {
     opacity: 0.2;
 }
 
-.market-item {
-    transition: transform 0.5s, opacity 0.5s;
+.slide-out {
+    transform: translateX(-100%);
+    pointer-events: none;
+}
+
+.slide-in {
+    transform: translateX(0);
+}
+
+/* Media Query for Desktop */
+@media only screen and (min-width: 768px) {
+
+    h2 {
+        font-size: 1.5rem;
+        font-weight: var(--font-weight-semibold);
+    }
+
+    p {
+        font-size: 1rem;
+        font-weight: var(--font-weight-regular)
+    }
+
+    .market-item:hover {
+        transform: scale(1.1) skew(-5deg);
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .market-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--hover-background-color);
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+        z-index: -1;
+    }
+
+    .market-item:hover::before {
+        opacity: 0.2;
+    }
 }
