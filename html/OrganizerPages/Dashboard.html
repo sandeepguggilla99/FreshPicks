@@ -7,18 +7,27 @@
     <title>Dashboard</title>
     <script type="module" src="../../src/OrganizerModules/Dashboard.js" defer></script>
     <link rel="stylesheet" href="../../css/Organizer/Dashboard.css">
+    <link rel="stylesheet" href="../../css/Loader.css">
+    <link rel="stylesheet" href="../../css/CustomAlert.css">
+    <link rel="stylesheet" href="../../css/OfflineHandler.css">
 </head>
 <body>
+    <!-- This is for Loader -->
+    <div id="preloader">
+        <img src="../../assets/favico 2.svg" alt="">
+    </div>
     <div class="header">
         <div class="search-bar">
             <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Find Events">
+            <input id="searchInput" type="text" placeholder="Find Events">
         </div>
         <button id="addMarketBtn" class="add-marker-btn">Add Market</button>
         <button id="manageMarketBtn" class="manage-marker-btn">Manage Market</button>
     </div>
 
-    <div id="googleMap"></div><br>
+    <div id="googleMap">
+        <div id="mapProgressBar"></div>
+    </div><br>
 
     <div class="events">
         <h1>Current Events</h1>
@@ -28,5 +37,16 @@
     <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC78YWX15M8UW4ECURpuG-Ro9SVKllrhXY&libraries=places&callback=initMap">
     </script>
+    <!-- This is for Custom Alert/Toast -->
+    <div id="customToast" class="toast">
+        <p id="toastMessage"></p>
+    </div>
+
+    <!-- <div id="offlinePage" class="offline-container">
+        <img src="../../assets/images.jpeg" alt="Offline Icon" class="offline-icon">
+        <h1>Oops! You're offline.</h1>
+        <p>Please check your internet connection and try again.</p>
+    </div> -->
+
 </body>
 </html>

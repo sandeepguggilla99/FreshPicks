@@ -1,4 +1,8 @@
 import { getCollectionData, deleteDocument } from '/helperClasses/firestoreService.js'
+import { showCustomToast } from '/helperClasses/Alert.js'
+
+const deleteSound = document.getElementById('popupSound')
+const addMarketBtn = document.getElementById('addMarketBtn')
 
 // Mark:- Variables
 let marketArr = []
@@ -30,6 +34,7 @@ async function getMarketsData() {
             createMarketItem(market, index)
             index += 1
         }
+        document.body.classList.add("loaded");
     } catch (error) {
         console.error("Error:", error)
     }
@@ -70,7 +75,7 @@ function createMarketItem(data, i) {
     deleteBtn.classList.add('delete-btn')
     deleteBtn.setAttribute('data-index', i)
 
-    deleteBtn.addEventListener('click', function(event) {
+    deleteBtn.addEventListener('click', function (event) {
         const clickedIndex = event.currentTarget.getAttribute('data-index')
         const clickedItem = event.currentTarget.closest('.market-item')
         deleteItem(clickedItem, clickedIndex)
@@ -78,12 +83,10 @@ function createMarketItem(data, i) {
 
     const binIcon = document.createElement('img')
     binIcon.setAttribute('id', 'binIcon')
-    binIcon.setAttribute('src', '../../assets/delete.svg')
+    binIcon.setAttribute('src', '../../assets/delete_24px.svg')
     binIcon.setAttribute('alt', 'Bin Icon')
     binIcon.classList.add('icon')
     deleteBtn.appendChild(binIcon)
-
-    marketItem.appendChild(deleteBtn)
 
     // Create and append edit button
     const editBtn = document.createElement('div')
@@ -97,13 +100,14 @@ function createMarketItem(data, i) {
     editIcon.classList.add('icon')
     editBtn.appendChild(editIcon)
 
-    editBtn.addEventListener('click', function(event) {
-        const clickedIndex = event.currentTarget.getAttribute('data-index') 
+    editBtn.addEventListener('click', function (event) {
+        const clickedIndex = event.currentTarget.getAttribute('data-index')
         const clickedItem = event.currentTarget.closest('.market-item')
         const docID = marketArr[clickedIndex].id
         window.location.href = '/html/OrganizerPages/EditMarket.html?data=' + docID
     })
     marketItem.appendChild(editBtn)
+    marketItem.appendChild(deleteBtn)
 
     // Append the created market item to the main container
     const container = document.querySelector('.container')
@@ -113,17 +117,26 @@ function createMarketItem(data, i) {
 function deleteItem(clickedItem, clickedIndex) {
     clickedItem.classList.add('deleting')
 
-    clickedItem.addEventListener('transitionend', function() {
+    clickedItem.addEventListener('transitionend', function () {
         const result = deleteDocument(marketCollectionName, marketArr[clickedIndex].id)
         if (result) {
             setTimeout(() => {
                 clickedItem.classList.add('deleted')
             }, 50)
             clickedItem.remove()
+            deleteSound.play()
         } else {
-            alert("Failed to delete the item. Please try again.")
+            showCustomToast("Failed to delete the item. Please try again.")
             clickedItem.classList.remove('deleting')
         }
-        
+
     })
 }
+
+addMarketBtn.addEventListener('click', function () {
+    document.body.classList.add('slide-out');
+
+    setTimeout(function () {
+        window.location.href = 'AddMarket.html';
+    }, 500);
+})

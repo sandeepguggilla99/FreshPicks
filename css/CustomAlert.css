@@ -1,0 +1,54 @@
+:root {
+    --toast-bg-color: #487556;
+    --toast-text-color: white;
+    --toast-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    --toast-close-color: white;
+    --toast-close-hover-color: #ddd;
+    --text-size: 1rem;
+}
+
+.toast {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--toast-bg-color);
+    color: var(--toast-text-color);
+    border-radius: 5px;
+    padding: 16px;
+    box-shadow: var(--toast-shadow);
+    min-width: 250px;
+    max-width: 300px;
+}
+
+#toastMessage {
+    font-size: var(--text-size);
+    text-align: center;
+}
+
+/* Cool animation for the toast */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(120%);
+    }
+}
+
+.show {
+    animation: slideIn 0.5s ease-in-out;
+}
+
+.hide {
+    animation: slideOut 0.5s ease-in-out;
+}

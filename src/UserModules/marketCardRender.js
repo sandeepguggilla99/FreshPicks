@@ -57,7 +57,7 @@ categoriesElement.textContent = `Categories: ${data.marketCategories.join(', ')}
 const seeDetailsButton = document.createElement("a");
 seeDetailsButton.textContent = "See Details";
 seeDetailsButton.classList.add("btn", "btn-primary"); // You can style this link as you like
-seeDetailsButton.href = `/src/UserModules/MarketDetails/index.html?documentId=${data.marketID}`; // Replace 'your-details-page' with the actual URL of your details page
+seeDetailsButton.href = `/html/User/MarketDetails.html?documentId=${data.marketID}`; // Replace 'your-details-page' with the actual URL of your details page
 
 // Append the HTML elements to the card body
 cardBody.appendChild(nameElement);

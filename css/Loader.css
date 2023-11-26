@@ -1,0 +1,40 @@
+:root {
+    --preloader-bg-color: rgba(0, 0, 0, 0.7);
+    --preloader-icon-width: 120px;
+    --preloader-icon-height: 120px;
+    --preloader-animation-duration: 3s;
+    --preloader-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    --preloader-opacity: 0.9;
+}
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--preloader-bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: var(--preloader-opacity);
+}
+
+#preloader img {
+    width: var(--preloader-icon-width);
+    height: var(--preloader-icon-height);
+    animation: spin var(--preloader-animation-duration) linear infinite;
+    box-shadow: var(--preloader-box-shadow);
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+body.loaded #preloader {
+    opacity: 0; 
+    pointer-events: none;
+}

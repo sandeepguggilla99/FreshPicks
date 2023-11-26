@@ -1,9 +1,12 @@
 import { getCollectionData } from '/helperClasses/firestoreService.js'
+import { handleNetworkChange } from '/helperClasses/OfflineHandler.js'
 
 const cardContainer = document.querySelector('.event')
 const popSound = document.getElementById('popupSound')
 const addMarketBtn = document.getElementById('addMarketBtn')
 const manageMarketBtn = document.getElementById('manageMarketBtn')
+const searchInput = document.getElementById('searchInput')
+
 // Mark:- Variables
 let marketArr = []
 const marketCollectionName = 'Markets'
@@ -11,41 +14,44 @@ let userId = "QuvoAepbjRVWyWcPvHaqWMREy712"
 let currentOpenInfoWindow = null
 
 // MARK:- Initialize map
-function initMap() {
+function initMap(arr) {
     var lat = 51.508742
     var lng = -0.120850
     var options = {
         center: new google.maps.LatLng(lat, lng),
         zoom: 13,
     }
-
+    document.getElementById('mapProgressBar').style.display = 'block'
     let map = new google.maps.Map(document.getElementById('googleMap'), options)
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+            const userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude)
             map.setCenter(userLocation)
-            marketArr.forEach((data) => {
+            // document.getElementById('mapProgressBar').style.display = 'none'
+            document.body.classList.add("loaded")
+            arr.forEach((data) => {
                 createMarketMarker(data, map)
             })
         }, function () {
             // Handle error or user denial for location
-            console.warn("Geolocation failed or permission denied.");
+            console.warn("Geolocation failed or permission denied.")
         })
 
         google.maps.event.addListener(map, 'closeclick', function () {
             if (currentOpenInfoWindow) {
-                currentOpenInfoWindow.close();
+                currentOpenInfoWindow.close()
                 infoContent.classList.remove('show')
             }
         })
+        
     } else {
 
     }
 }
 
 function createMarketMarker(data, map) {
-    const customIconUrl = '../../assets/Location_Marker.png';
+    const customIconUrl = '../../assets/Location_Marker.png'
 
     const marker = new google.maps.Marker({
         position: { lat: data.location.lat, lng: data.location.lng },
@@ -57,57 +63,57 @@ function createMarketMarker(data, map) {
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(20, 20),
         }
-    });
+    })
     const image = data.media.find(item => item.type === "img")
 
-    const infoContent = document.createElement('div');
-    infoContent.className = 'info-window-content';
-    infoContent.style.maxWidth = '300px'; // Set a max-width for the content
+    const infoContent = document.createElement('div')
+    infoContent.className = 'info-window-content'
+    infoContent.style.maxWidth = '300px'
     
     infoContent.innerHTML = `
-      <div style="position: relative;">
-        <img src="${image.file}" alt="${data.location.name}" style="width: 300px; height: 150px; border-top-left-radius: 8px; border-top-right-radius: 8px;"/>
+      <div style="position: relative">
+        <img src="${image.file}" alt="${data.location.name}" style="width: 300px height: 150px border-top-left-radius: 8px border-top-right-radius: 8px"/>
       </div>
-      <div style="background: white; padding: 10px; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
-        <div style="font-weight: bold; margin-bottom: 5px;">${data.marketName}</div>
-        <span style="color: green;">${data.location.name}</span>
-        <div style="margin-bottom: 5px;">
-          <span style="color: #FFD700;">★</span> 4
+      <div style="background: white padding: 10px border-bottom-left-radius: 8px border-bottom-right-radius: 8px box-shadow: 0 2px 4px rgba(0,0,0,0.2)">
+        <div style="font-weight: bold margin-bottom: 5px">${data.marketName}</div>
+        <span style="color: green">${data.location.name}</span>
+        <div style="margin-bottom: 5px">
+          <span style="color: #FFD700">★</span> 4
         </div>
-        <div style="display: flex; justify-content: space-between;">
-          <button id="direction-${data.id}" class="get-directions" style="background-color: #E0E0E0; padding: 8px; border-radius: 4px; border: none; cursor: pointer;">
-          <img src="../../assets/direction.png" alt="Share" style="width: 30px; height: 30px;">
+        <div style="display: flex justify-content: space-between">
+          <button id="direction-${data.id}" class="get-directions" style="background-color: #E0E0E0 padding: 8px border-radius: 4px border: none cursor: pointer">
+          <img src="../../assets/direction.png" alt="Share" style="width: 30px height: 30px">
           </button>
-          <button id="share-${data.id}" class="share-location" style= "background-color: #E0E0E0; "padding: 8px; border-radius: 4px; border: none; cursor: pointer;">
-          <img src="../../assets/share.png" alt="Share" style="width: 25px; height: 25px;">
+          <button id="share-${data.id}" class="share-location" style= "background-color: #E0E0E0 "padding: 8px border-radius: 4px border: none cursor: pointer">
+          <img src="../../assets/share.png" alt="Share" style="width: 25px height: 25px">
           </button>
         </div>
-      </div>`;
+      </div>`
 
     const infoWindow = new google.maps.InfoWindow({
         content: infoContent
-    });
+    })
 
     marker.addListener('click', () => {
         if (currentOpenInfoWindow) {
-            currentOpenInfoWindow.close();
+            currentOpenInfoWindow.close()
         }
-        infoWindow.open(map, marker);
+        infoWindow.open(map, marker)
         currentOpenInfoWindow = infoWindow
         popSound.play()
-        setTimeout(() => addDirectionListener(data.id, data.location.lat, data.location.lng, image), 0);
-        setTimeout(() => infoContent.classList.add('show'), 10);
-    });
+        setTimeout(() => addDirectionListener(data.id, data.location.lat, data.location.lng, image), 0)
+        setTimeout(() => infoContent.classList.add('show'), 10)
+    })
 }
 
 function addDirectionListener(id, lat, lng, img) {
-    const button = document.getElementById(`direction-${id}`);
-    const shareBtn = document.getElementById(`share-${id}`);
+    const button = document.getElementById(`direction-${id}`)
+    const shareBtn = document.getElementById(`share-${id}`)
 
     if (button) {
         button.addEventListener('click', () => {
-            getDirections(lat, lng);
-        });
+            getDirections(lat, lng)
+        })
     }
 
     shareBtn.addEventListener('click', () => {
@@ -116,8 +122,8 @@ function addDirectionListener(id, lat, lng, img) {
 }
 
 function getDirections(lat, lng) {
-    const directionUrl = `https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${lat},${lng}`;
-    window.open(directionUrl, '_blank');
+    const directionUrl = `https://www.google.com/maps/dir/?api=1&origin=current+location&destination=${lat},${lng}`
+    window.open(directionUrl, '_blank')
 }
 
 // Mark:- Fetch Market Data
@@ -128,18 +134,24 @@ async function getMarketsData() {
             console.log(i)
             if (i.userId === userId) {
                 marketArr.push(i)
-                const card = createCard(i)
-                cardContainer.appendChild(card)
             }
-
-        }
-        initMap()
+        }    
+        loadData(marketArr)
     } catch (error) {
         console.error("Error:", error)
     }
 }
 
 getMarketsData()
+
+function loadData(arr) {
+    cardContainer.innerHTML = ``
+    for (const market of arr) {
+        const card = createCard(market)
+        cardContainer.appendChild(card)
+    }
+    initMap(arr)
+}
 
 async function shareData(imageFile, url) {
     if (navigator.share) {
@@ -149,14 +161,14 @@ async function shareData(imageFile, url) {
                 url: url,
                 title: 'Check this out!',
                 text: 'I wanted to share this with you.'
-            });
-            console.log('Data was shared successfully');
+            })
+            console.log('Data was shared successfully')
         } catch (err) {
-            console.error('Share failed:', err.message);
+            console.error('Share failed:', err.message)
         }
     } else {
         // Fallback for browsers that don't support the Web Share API
-        console.log('Web Share API is not supported in this browser.');
+        console.log('Web Share API is not supported in this browser.')
     }
 }
 
@@ -211,9 +223,9 @@ function createCard(data) {
     footer.appendChild(detailsLink)
 
     detailsLink.addEventListener('click', function(event) {
-        event.preventDefault();
-        openDetailPage(itemId);
-    });
+        event.preventDefault()
+        openDetailPage(itemId)
+    })
     return card
 }
 
@@ -221,15 +233,53 @@ function openDetailPage(id) {
     window.location.href = `/src/UserModules/MarketDetails/index.html?documentId=${id}`
 }
 
+function filterData(text) {
+    if (text == "") {
+        loadData(marketArr)
+    } else {
+        var arr = []
+        for (const market of marketArr) {
+            if (market.marketName.includes(text)) {
+                console.log(market.marketName)
+                arr.push(market)
+            }
+        }
+        loadData(arr)
+    }
+}
+
 // MARK:- Add Event Listeners
 
 addMarketBtn.addEventListener('click', function () {
-    window.location.href = '/html/OrganizerPages/AddMarket.html'
+    document.body.classList.add('slide-out')
+    setTimeout(function () {
+        window.location.href = '/html/OrganizerPages/AddMarket.html'
+    }, 500)
 })
 
 manageMarketBtn.addEventListener('click', function () {
-    window.location.href = '/html/OrganizerPages/ManageMarket.html'
+    document.body.classList.add('slide-out')
+
+    setTimeout(function () {
+        window.location.href = '/html/OrganizerPages/ManageMarket.html'
+    }, 500)
 })
 
+searchInput.addEventListener('input', function() {
+    filterData(searchInput.value)
+})
 
+// document.addEventListener('DOMContentLoaded', function () {
+//     const offlinePage = document.getElementById('offlinePage');
+//     handleNetworkChange(offlinePage);
 
+//     // Event listener for online/offline events
+//     window.addEventListener('online', function() {
+//         console.log('online')
+//         handleNetworkChange(offlinePage)
+//     })
+//     window.addEventListener('offline', function() {
+//         console.log('online')
+//         handleNetworkChange(offlinePage)
+//     })
+// })

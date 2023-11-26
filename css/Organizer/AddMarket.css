@@ -3,6 +3,7 @@
       margin: 0;
       padding: 0;
       background-color: #f2f2f2;
+      transition: opacity 0.5s ease-in-out;
     }
 
     header {
@@ -295,3 +296,8 @@
         opacity: 1;
       }
     }
+
+    .fade-out {
+      opacity: 0;
+      pointer-events: none;
+  }

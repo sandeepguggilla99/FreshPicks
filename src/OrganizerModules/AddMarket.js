@@ -1,6 +1,7 @@
 import { MAP_KEY } from '/helperClasses/constants.js'
 import { DragAndDropHandler, previewImage, previewVideo } from '../../helperClasses/DragAndDropHandler.js'
 import { getDataFromFirestore, uploadFileToStorage, getDownloadURLForFile, setDataToCollection } from '../../helperClasses/firestoreService.js'
+import { showCustomToast } from '/helperClasses/Alert.js'
 
 // MARK:- Variables
 const imageDragAndDrop = new DragAndDropHandler('imageDropZone', 'imagePreview', 'image', previewImage)
@@ -39,6 +40,8 @@ let vendorArr = []
 let profileImageFile
 let locationObj
 let dateObj
+
+document.body.classList.add("loaded");
 
 // MARK:- Initialize the Map
 function initMap() {
@@ -273,14 +276,17 @@ async function setData() {
   console.log(data)
   const emptyKeys = checkEmptyValues(data)
   if (emptyKeys.length > 0) {
-    alert(`The following keys have null, undefined, or empty values: ${emptyKeys.join(', ')}`)
+    document.body.classList.add("loaded");
+    showCustomToast(`The following empty values: ${emptyKeys.join(', ')}`)
   } else {
     const a = setDataToCollection(collectionName, data)
     if (a) {
+      document.body.classList.add("loaded");
       openFinishModal()
     } else {
+      document.body.classList.add("loaded");
       console.log('fail')
-      alert(`Something went wrong`)
+      showCustomToast(`Something went wrong`)
     }
   }
 

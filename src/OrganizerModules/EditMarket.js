@@ -1,6 +1,7 @@
 import { MAP_KEY } from '/helperClasses/constants.js'
 import { DragAndDropHandler, previewImage, previewVideo } from '../../helperClasses/DragAndDropHandler.js'
 import { getDataFromFirestore, uploadFileToStorage, getDownloadURLForFile, setDataToCollection } from '../../helperClasses/firestoreService.js'
+import { showCustomToast } from '/helperClasses/Alert.js'
 
 // MARK:- Variables
 const imageDragAndDrop = new DragAndDropHandler('imageDropZone', 'imagePreview', 'image', previewImage)
@@ -73,6 +74,17 @@ function loadData(data) {
   console.log(data.description, data.date.time)
   description.value = data.description
   populateFaqs(data.faq)
+  locationObj = {
+    "name": data.location.name,
+    "lat": data.location.lat,
+    "lng": data.location.lng
+  }
+  dateObj = {
+    "date": data.date.date,
+    "time": data.date.time
+  }
+  document.body.classList.add("loaded");
+
 }
 
 function setDate(data) {
@@ -80,10 +92,12 @@ function setDate(data) {
   const timeFromBackend = data.date.time
 
   const [day, month, year] = dateFromBackend.split('/')
-  const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  const formattedDate = `${day.padStart(2, '0')}/${month.padStart(2, '0')}/${year}`
+  // `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
 
-  const datetimeValue = `${formattedDate}T${timeFromBackend.slice(0, 5)}`
+  const datetimeValue = `${formattedDate}, ${timeFromBackend.slice(0, 5)}`
 
+  console.log("DATE**", datetimeValue)
   const dateTimeInput = document.getElementById('dateTime')
   dateTimeInput.value = datetimeValue
 }
@@ -271,7 +285,7 @@ function populateFaqs(faqsFromResponse) {
   faqsFromResponse.forEach(faqData => {
     addFaqItem(faqData);
   });
-  addEmptyFaq()
+  // addEmptyFaq()
 }
 
 // MARK:- Fetching faq data
@@ -313,7 +327,7 @@ function addEmptyFaq() {
 
 // MARK: - Upload Market Data to Firestore
 async function setData() {
-
+  document.body.classList.remove("loaded");
   // Get the user's email
   const collectionName = 'Markets'
   const categories = categoryArr.filter(item => item.isSelected === true).map(item => item.id)
@@ -334,14 +348,17 @@ async function setData() {
 
   const emptyKeys = checkEmptyValues(data)
   if (emptyKeys.length > 0) {
-    alert(`The following keys have null, undefined, or empty values: ${emptyKeys.join(', ')}`)
+    document.body.classList.add("loaded");
+    showCustomToast(`The following empty values: ${emptyKeys.join(', ')}`)
   } else {
     const a = setDataToCollection(collectionName, data)
     if (a) {
+      document.body.classList.add("loaded");
       openFinishModal()
     } else {
+      document.body.classList.add("loaded");
       console.log('fail')
-      alert(`Something went wrong`)
+      showCustomToast(`Something went wrong`)
     }
   }
 
@@ -382,7 +399,7 @@ async function uploadMedia() {
     files.push(...videoFiles)
   }
 
-  console.log(files.length, files)
+  console.log("******",files.length, files)
 
   for (const file of files) {
     if (file.type.startsWith('image/')) {
@@ -425,6 +442,15 @@ async function uploadVendorMedia() {
 
   for (const data of vendorArr) {
     const currentTime = new Date().getTime()
+    if (data.profileImg) {
+      let obj = {
+        "name": data.name,
+        "categories": data.categories,
+        "profileImg": data.profileImg,
+        "description": data.description
+      }
+      arr.push(obj)
+    } else {
     const storagePath = `image/${data.file.name}/${currentTime}`
     const result = await uploadFileToStorage(data.file, storagePath)
     if (result) {
@@ -441,8 +467,8 @@ async function uploadVendorMedia() {
       arr.push(obj)
     } else {
       // Handle error
-
     }
+  }
   }
   if (arr.length == vendorArr.length) {
     return arr

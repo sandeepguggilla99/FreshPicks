@@ -5,11 +5,17 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Markets</title>
+    <title>Edit Market</title>
     <link rel="stylesheet" href="../../css/Organizer/AddMarket.css">
+    <link rel="stylesheet" href="../../css/Loader.css">
+    <link rel="stylesheet" href="../../css/CustomAlert.css">
+
 </head>
 
 <body>
+    <div id="preloader">
+        <img src="../../assets/favico 2.svg" alt="">
+    </div>
     <header>
         <h1>Edit Market</h1>
     </header>
@@ -104,7 +110,9 @@
           <button id="finishBtn">Finish</button>
         </div>
       </div>
-
+      <div id="customToast" class="toast">
+        <p id="toastMessage"></p>
+    </div>
 </body>
 
 </html>
